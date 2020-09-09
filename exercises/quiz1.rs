@@ -7,10 +7,14 @@
 // more than 40 at once, each apple only costs 1! Write a function that calculates
 // the price of an order of apples given the order amount. No hints this time!
 
-// I AM NOT DONE
-
 // Put your function here!
-// fn ..... {
+fn calculate_apple_price(gram:i32)->i32 {
+    if gram < 40 {
+        gram*2
+    } else {
+        gram
+    }
+}
 
 // Don't modify this function!
 #[test]

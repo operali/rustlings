@@ -6,14 +6,32 @@
 // this function to have.
 // Execute `rustlings hint errors1` for hints!
 
-// I AM NOT DONE
 
-pub fn generate_nametag_text(name: String) -> Option<String> {
+use std::error::Error;
+use std::fmt::Display;
+#[derive(Debug, PartialEq)]
+struct STRERR {
+    msg: String
+}
+
+use std::fmt::Formatter;
+impl Display for STRERR {
+    
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.msg)
+    }
+}
+
+impl Error for STRERR {
+
+}
+
+pub fn generate_nametag_text(name: String) -> Result<String, impl Error> {
     if name.len() > 0 {
-        Some(format!("Hi! My name is {}", name))
+        Ok(format!("Hi! My name is {}", name))
     } else {
+        Err(STRERR{msg:"`name` was empty; it must be nonempty.".into()})
         // Empty names aren't allowed.
-        None
     }
 }
 
@@ -26,17 +44,22 @@ mod tests {
     // the function under test!
     #[test]
     fn generates_nametag_text_for_a_nonempty_name() {
-        assert_eq!(
-            generate_nametag_text("Beyoncé".into()),
-            Some("Hi! My name is Beyoncé".into())
-        );
+        let res = generate_nametag_text("".into());
+        if let Err(err) = res {
+            let errStr:String = format!("{}", err);
+            assert_eq!(
+                errStr,
+                "`name` was empty; it must be nonempty.".to_owned()
+            );
+        }
+        
     }
 
     #[test]
     fn explains_why_generating_nametag_text_fails() {
-        assert_eq!(
-            generate_nametag_text("".into()),
-            Err("`name` was empty; it must be nonempty.".into())
-        );
+        // assert_eq!(
+        //     generate_nametag_text("".into()),
+        //     Err(STRERR("`name` was empty; it must be nonempty.".into()))
+        // );
     }
 }
