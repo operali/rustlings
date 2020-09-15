@@ -11,8 +11,6 @@ struct Color {
     blue: u8,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need create implementation for a tuple of three integer,
@@ -22,22 +20,75 @@ struct Color {
 // but slice implementation need check slice length!
 // Also note, that chunk of correct rgb color must be integer in range 0..=255.
 
+fn isValid(c: i16) -> Result<u8, String> {
+    if c < 0 || c > 255 {
+        Err(format!("wrong color value for {}", c))
+    } else {
+        Ok(c as u8)
+    }
+}
+
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = String;
-    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {}
+    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let r = isValid(tuple.0)?;
+        let g = isValid(tuple.1)?;
+        let b = isValid(tuple.2)?;
+
+        Ok(Color {
+            red: r as u8,
+            green: g as u8,
+            blue: b as u8,
+        })
+    }
 }
 
 // Array implementation
 impl TryFrom<[i16; 3]> for Color {
     type Error = String;
-    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {}
+    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let r = isValid(arr[0])?;
+        let g = isValid(arr[1])?;
+        let b = isValid(arr[2])?;
+
+        Ok(Color {
+            red: r as u8,
+            green: g as u8,
+            blue: b as u8,
+        })
+    }
 }
 
 // Slice implementation
 impl TryFrom<&[i16]> for Color {
     type Error = String;
-    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {}
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err("slice len is not three".to_owned());
+        }
+        let r = isValid(
+            *slice
+                .get(0)
+                .ok_or_else(|| String::from("wrong index of slice"))?,
+        )?;
+        let g = isValid(
+            *slice
+                .get(1)
+                .ok_or_else(|| String::from("wrong index of slice"))?,
+        )?;
+        let b = isValid(
+            *slice
+                .get(2)
+                .ok_or_else(|| String::from("wrong index of slice"))?,
+        )?;
+
+        Ok(Color {
+            red: r as u8,
+            green: g as u8,
+            blue: b as u8,
+        })
+    }
 }
 
 fn main() {
